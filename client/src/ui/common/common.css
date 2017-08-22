@@ -1,0 +1,26 @@
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.row:first-child {
+  margin-top: 5px;
+}
+
+
+.cell:first-child {
+  margin-left: 5px;
+}
+
+.cell {
+  display: flex;
+  margin-right: 5px;
+  width: 48px;
+  height: 48px;
+  background-color: gray;
+}

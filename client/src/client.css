@@ -1,0 +1,40 @@
+html {
+
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+#game {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+#game canvas {
+  background-color: black;
+}
+
+.login {
+  margin-top: 200px;
+}

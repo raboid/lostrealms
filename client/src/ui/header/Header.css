@@ -1,0 +1,12 @@
+.heart {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  background-image: url('/assets/images/heart.png');
+}
+
+.header {
+  display: flex;
+  flex-shrink: 0;
+  height: 48px;
+}

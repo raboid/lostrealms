@@ -1,0 +1,140 @@
+{"frames": {
+
+"effect-orb-black-1.png":
+{
+	"frame": {"x":0,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-black-2.png":
+{
+	"frame": {"x":24,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-black-3.png":
+{
+	"frame": {"x":48,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-black-4.png":
+{
+	"frame": {"x":72,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-blue-1.png":
+{
+	"frame": {"x":96,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-blue-2.png":
+{
+	"frame": {"x":120,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-blue-3.png":
+{
+	"frame": {"x":144,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-blue-4.png":
+{
+	"frame": {"x":168,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-green-1.png":
+{
+	"frame": {"x":192,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-green-2.png":
+{
+	"frame": {"x":216,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-green-3.png":
+{
+	"frame": {"x":240,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-green-4.png":
+{
+	"frame": {"x":264,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-purple-1.png":
+{
+	"frame": {"x":288,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-purple-2.png":
+{
+	"frame": {"x":312,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-purple-3.png":
+{
+	"frame": {"x":336,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"effect-orb-purple-4.png":
+{
+	"frame": {"x":360,"y":0,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "effects.png",
+	"format": "RGBA8888",
+	"size": {"w":384,"h":24},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:21691b83dcfcb4d079e4657281265ad2:d566b2bd6d69eed6dfeb3fd73a1843a5:05d3c1256da5d10ff4f36ef2966c3322$"
+}
+}
