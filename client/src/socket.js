@@ -1,5 +1,8 @@
 import { encode, decode } from "shared/utils"
 
+const DEV_URL = "ws://localhost:3000"
+const PROD_URL = "ws://lostrealms.io/ws"
+
 export default class Socket {
   constructor(onAction) {
     this.handleAction = onAction
@@ -18,7 +21,7 @@ export default class Socket {
   }
 
   connect() {
-    this.socket = new WebSocket("ws://localhost:3000")
+    this.socket = new WebSocket(DEV_URL)
 
     this.socket.addEventListener("error", this.onError)
 

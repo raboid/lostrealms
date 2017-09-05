@@ -15,6 +15,7 @@ class EntityServer extends Server {
     this.entitySystem = new EntitySystem([], [], this.redis)
 
     setTimeout(this.tick, this.timestep)
+    console.log('Entity Server Started')
   }
 
   tick() {

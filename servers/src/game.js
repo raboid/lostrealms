@@ -14,5 +14,7 @@ new GameServer(config)
 class GameServer extends Server {
   constructor(config) {
     super(config)
+
+    console.log('Game Server started')
   }
 }

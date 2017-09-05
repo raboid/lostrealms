@@ -49,6 +49,8 @@ export default class SocketServer extends Server {
     this.psubscribe("entity:*", this.onEntityChannel)
 
     setInterval(this.sendUpdatedEntitiesToClients, this.timestep)
+
+    console.log('Socket Server listening on port', this.wssPort)
   }
 
   onClientAction(client, action) {

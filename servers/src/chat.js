@@ -10,6 +10,8 @@ class ChatServer extends Server {
     super(config)
 
     this.waitForChatAction()
+
+    console.log('Chat Server Started')
   }
 
   waitForChatAction() {

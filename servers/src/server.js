@@ -26,7 +26,6 @@ export default class Server {
   }
 
   handleSubscriptions(channel, message) {
-    console.log("msg", channel, message)
     this.channels[channel](decode(message))
   }
 
@@ -35,7 +34,6 @@ export default class Server {
   }
 
   subscribe(channel, handler) {
-    console.log("sub", channel, handler)
     this.channels[channel] = handler
     return this.sub.subscribe(channel)
   }
