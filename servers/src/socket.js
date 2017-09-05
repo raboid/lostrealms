@@ -166,7 +166,7 @@ export default class SocketServer extends Server {
     if (entity.deleted) {
       console.log("deleted", entity, this.entities)
       const localEntity = this.entities[entity.id]
-      if (localEntity.type === "player") {
+      if (localEntity && localEntity.type === "player") {
         this.redis.del(`player:${localEntity.name}`)
         delete this.entities[entity.id]
       }

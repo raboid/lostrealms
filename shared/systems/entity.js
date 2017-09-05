@@ -80,6 +80,7 @@ export default class EntitySystem {
     return Object.values(this.entities).some(otherEntity => {
       if (
         otherEntity !== entity &&
+        otherEntity.sid !== entity.id &&
         otherEntity.collidable &&
         this.hitTestRectangle(entity, otherEntity)
       ) {
@@ -131,6 +132,7 @@ export default class EntitySystem {
       cid,
       x: source.x,
       y: source.y,
+      sid: source.id,
       origin,
       target
     }
@@ -204,7 +206,8 @@ export default class EntitySystem {
           updatedEntity.deleted = true
           break
         case "player":
-          if (this.entities[updatedEntity.collision].type === "bolt") {
+          const otherEntity = this.entities[updatedEntity.collision];
+          if (otherEntity && otherEntity.type === "bolt") {
             updatedEntity.health -= 100
           }
           break

@@ -10,7 +10,7 @@ const height = 24
 const halfWidth = width / 2
 const halfHeight = height / 2
 
-export default function Bolt({ origin, target, x, y, cid }) {
+export default function Bolt({ sid, origin, target, x, y, cid }) {
   const dX = target.x - origin.x
   const dY = target.y - origin.y
 
@@ -35,6 +35,8 @@ export default function Bolt({ origin, target, x, y, cid }) {
     type: "bolt",
 
     collidable: true,
+
+    sid,
 
     cid,
 
