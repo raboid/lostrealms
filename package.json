@@ -4,7 +4,9 @@
   "description": "lostrealms.io",
   "scripts": {
     "build:servers": "yarn clean:servers && concurrently \"babel --watch servers/src -d servers/dist\" \"babel --watch shared -d servers/dist/shared\"",
+    "build:servers:prod": "yarn clean:servers && babel servers/src -d servers/dist && babel shared -d servers/dist/shared",
     "build:client": "yarn clean:client && webpack --progress --watch --config webpack.config.dev.js",
+    "build:client:prod": "yarn clean:client && webpack --progress --config webpack.config.dev.js",
     "start": "concurrently --kill-others \"nodemon servers/dist/socket.js\" \"nodemon servers/dist/chat.js\" \"nodemon servers/dist/entity.js\"",
     "build": "concurrently \"yarn build:server\" \"yarn build:client\"",
     "clean:client": "rm -rf client/dist",
