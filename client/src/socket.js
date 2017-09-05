@@ -35,7 +35,7 @@ export default class Socket {
 
   onError(error) {
     console.log("WS error. Reconnecting")
-    setTimeout(this.connect, 5000)
+    //setTimeout(this.connect, 5000)
   }
 
   onClose() {

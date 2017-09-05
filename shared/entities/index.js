@@ -1,4 +1,4 @@
-import Player from "./Player"
-import Bolt from "./Bolt"
+import Player from "./player"
+import Bolt from "./bolt"
 
 export { Player, Bolt }
