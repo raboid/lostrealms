@@ -1,15 +1,18 @@
-import Redis from 'ioredis';
-
-import Engine from './../../shared/engine';
+import Server from "./server"
 
 const config = {
-  port: 6379,
-};
+  redis: {
+    port: 6379,
+    subscriber: {
+      channels: ["game"]
+    }
+  }
+}
 
-var redis = new Redis(config);
+new GameServer(config)
 
-//redis.blrpop('game').then()
-
-var engine = new Engine();
-
-engine.start();
+class GameServer extends Server {
+  constructor(config) {
+    super(config)
+  }
+}

@@ -1,43 +1,29 @@
-import { generateId } from 'utils'
-
-const speed = 10;
-
-const duration = 10;
-
-const knockback = 5;
+import SharedBolt from "shared/entities/bolt"
 
 export default function Bolt(entity) {
-  const dX = entity.tX - entity.x;
-  const dY = entity.tY - entity.y;
+  const sprite = new PIXI.Sprite(
+    PIXI.loader.resources["effects"].textures["effect-orb-blue-1.png"]
+  )
 
-  const magnitude = Math.sqrt(dX * dX + dY * dY);
+  if (entity.origin && entity.target) {
+    entity = SharedBolt(entity)
+  }
 
-  const vX = dX / magnitude * speed
-  const vY = dY / magnitude * speed
+  sprite.anchor.x = 0.5
+  sprite.anchor.y = 0.5
 
-  const texture = PIXI.loader.resources['effects'].textures['effect-orb-blue-1.png'];
+  sprite.position.x = entity.x
+  sprite.position.y = entity.y
 
-  const sprite = new PIXI.Sprite(texture);
+  sprite.halfWidth = sprite.width / 2
+  sprite.halfHeight = sprite.height / 2
 
-  sprite.anchor.x = 0.5;
-  sprite.anchor.y = 0.5;
-
-  sprite.position.x = entity.x;
-  sprite.position.y = entity.y;
+  sprite.centerX = sprite.position.x + sprite.halfWidth
+  sprite.centerY = sprite.position.y + sprite.halfHeight
 
   return {
     ...entity,
 
-    cid: generateId(),
-
-    sprite,
-
-    knockback,
-
-    duration,
-
-    vX,
-
-    vY,
+    sprite
   }
 }

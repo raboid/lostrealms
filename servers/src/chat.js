@@ -1,55 +1,75 @@
-import Redis from 'ioredis';
+import Server from "./server"
+import { CHAT_CHANNELS, CHAT_ACTIONS, REDIS_CHANNELS } from "./shared/constants"
+import { chatMessage } from "./shared/actions"
+import { decode } from "./shared/utils"
 
-import { CHAT_CHANNELS, CHAT_ACTIONS, REDIS_CHANNELS } from './constants';
-import { chatMessage } from './actions';
-import { decode } from './utils';
+const RETRY_TIME = 1000
+
+class ChatServer extends Server {
+  constructor(config) {
+    super(config)
+
+    this.waitForChatAction()
+  }
+
+  waitForChatAction() {
+    this.redis.brpop("actions:chat", 0).then(this.onChatAction)
+  }
+
+  onChatAction(resultArray) {
+    const action = decode(resultArray[1])
+
+    this.updateChat(action)
+
+    this.waitForChatAction()
+  }
+
+  updateChat(action) {
+    switch (action.type) {
+      case CHAT_ACTIONS.MESSAGE:
+        switch (action.payload.channel) {
+          case CHAT_CHANNELS.GLOBAL:
+          case CHAT_CHANNELS.LOCAL:
+            this.sendGlobalMessage(action)
+            break
+          default:
+            if (validatePrivateMessage(action)) {
+              this.sendPrivateMessage(action)
+            } else {
+              this.sendNoRecipient(action)
+            }
+        }
+    }
+  }
+
+  playerExists(id) {
+    return redis.exists(`player:${id}`)
+  }
+
+  validatePrivateMessage(action) {
+    if (this.playerExists(action.payload.to)) {
+      return true
+    }
+    return false
+  }
+
+  sendGlobalMessage(action) {
+    this.publish(REDIS_CHANNELS.CHAT, chatMessage(action.payload))
+  }
+
+  sendNoRecipient(action) {
+    this.publish(action.payload.from, noChatRecipient(action.payload))
+  }
+
+  sendPrivateMessage(action) {
+    this.publish(action.payload.to, chatMessage(action.payload))
+  }
+}
 
 const config = {
-  port: 6379,
-};
-
-const RETRY_TIME = 1000;
-
-const redis = new Redis(config);
-
-function playerExists(id) {
-  return redis.exists(`player:${id}`);
-}
-
-function validatePrivateMessage(action) {
-  if(playerExists(action.payload.to)) {
-    return true;
-  }
-  return false;
-}
-
-function sendPrivateMessage(action) {
-  redis.publish(action.payload.to, chatMessage(action.payload));
-}
-
-function updateChat(action) {
-  switch(action.type) {
-    case CHAT_ACTIONS.MESSAGE:
-      switch(action.payload.channel) {
-        case CHAT_CHANNELS.GLOBAL:
-        case CHAT_CHANNELS.LOCAL:
-          redis.publish(REDIS_CHANNELS.CHAT, chatMessage(action.payload))
-          break;
-        default:
-          if(validatePrivateMessage(action)) {
-            sendPrivateMessage(action);
-          } else {
-            redis.publish(action.payload.from, noChatRecipient(action.payload));
-          }
-      }
+  redis: {
+    port: 6379
   }
 }
 
-function handleChat(resultArray) {
-  const action = decode(resultArray[1])
-  //console.log('CHAT: Action', Object.keys(action), Object.values(action))//action.payload.channel, action.payload.to, action.payload.from, action.payload.message);
-  updateChat(action);
-  redis.brpop('actions:chat', 0).then(handleChat);
-}
-
-redis.brpop('actions:chat', 0).then(handleChat);
+new ChatServer(config)

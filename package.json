@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "lostrealms.io",
   "scripts": {
-    "build:servers": "yarn clean:servers && babel --watch servers/src shared -d servers/dist",
+    "build:servers": "yarn clean:servers && concurrently \"babel --watch servers/src -d servers/dist\" \"babel --watch shared -d servers/dist/shared\"",
     "build:client": "yarn clean:client && webpack --progress --watch --config webpack.config.dev.js",
     "start": "concurrently --kill-others \"nodemon servers/dist/socket.js\" \"nodemon servers/dist/chat.js\" \"nodemon servers/dist/entity.js\"",
     "build": "concurrently \"yarn build:server\" \"yarn build:client\"",
@@ -60,7 +60,7 @@
     "uws": "^8.14.0"
   },
   "lint-staged": {
-    "*.js": [
+    "**/*.js": [
       "prettier --no-semi --write",
       "git add"
     ]

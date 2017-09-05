@@ -1,101 +1,92 @@
-import Redis from 'ioredis';
+import Server from "./server"
+import EntitySystem from "./systems/entity"
+import { ENTITY_ACTIONS } from "./shared/constants"
 
-import { ENTITY_ACTIONS } from './constants';
-import { encode, decode } from './utils';
-import EntitySystem from './systems/entity';
+class EntityServer extends Server {
+  constructor(config) {
+    super(config)
+
+    this.onEntitiesChannel = this.onEntitiesChannel.bind(this)
+    this.onActionChannel = this.onActionChannel.bind(this)
+    this.tick = this.tick.bind(this)
+
+    this.subscribe("entities", this.onEntitiesChannel)
+
+    this.entitySystem = new EntitySystem([], [], this.redis)
+
+    setTimeout(this.tick, this.timestep)
+  }
+
+  tick() {
+    setTimeout(this.tick, this.timestep)
+
+    const updatedEntityIds = this.entitySystem.update()
+
+    if (updatedEntityIds.length === 0) {
+      return
+    }
+
+    console.log("updated entity ids", updatedEntityIds)
+
+    const pipeline = this.redis.pipeline()
+
+    updatedEntityIds.forEach(id => {
+      let entity = this.entitySystem.get(id)
+      if (!entity) {
+        // entity was deleted
+        entity = { id, deleted: true }
+        pipeline.del(`entity:${id}`)
+      } else {
+        // update entity in redis
+        pipeline.hmset(`entity:${id}`, entity) // only set updated fields?
+      }
+      this.publishUpdate(entity)
+    })
+
+    pipeline.exec()
+  }
+
+  publishUpdate(entity) {
+    console.log("publishing entity channel", entity)
+    this.publish(`entity:${entity.id}`, entity)
+      .then(listeners => {
+        if (!listeners) {
+          // No one cares about these updates so unsub
+          this.unsubscribe(`actions:${entity.id}`)
+
+          this.entitySystem.removeEntity(entity)
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  onEntitiesChannel(entity) {
+    this.entitySystem.addEntity(entity).then(entity => {
+      if (entity.type === "player") {
+        const playerKey = `player:${entity.name}`
+        this.redis
+          .hmset(playerKey, entity)
+          .then(() => this.publish(playerKey, entity))
+      }
+
+      this.subscribe(`actions:${entity.id}`, this.onActionChannel)
+      this.publish(`entity:${entity.id}`, entity)
+    })
+  }
+
+  onActionChannel(action) {
+    console.log("ENT SERVER RECEIVED", action)
+    this.entitySystem.addAction(action)
+  }
+}
 
 const config = {
-  port: 6379,
-};
-
-const TICK_RATE = 20
-
-const TIMESTEP = parseInt(1000 / TICK_RATE) //ms
-
-const ENTITY_LIMIT = 10000;
-
-const redis = new Redis(config);
-const sub = new Redis(config);
-
-sub.on('message', handleMessage);
-
-const entitySystem = new EntitySystem();
-
-function getEntityId(channel) {
-  return channel.split(':')[1];
+  redis: {
+    port: 6379,
+    subscriber: true
+  },
+  tickRate: 20,
+  entityLimit: 10000
 }
 
-function handleMessage(channel, message) {
-  console.log('sub message', channel, message)
-  switch(channel) {
-    case 'entities':
-      handleNewEntity(message)
-      break;
-    default:
-      handleAction(message)
-  }
-}
-
-function handleAction(action) {
-  entitySystem.addAction(decode(action));
-}
-
-function handleNewEntity(entity) {
-  entity = decode(entity)
-
-  sub.subscribe(`actions:${entity.id}`);
-
-  console.log('subbed', `actions:${entity.id}`);
-
-  entitySystem.addEntity(decode(encode(entity)))
-}
-
-function publishUpdate(entity) {
-  console.log('publishing', `entity:${entity.id}`);
-  redis.publish(`entity:${entity.id}`, encode(entity)).then(listeners => {
-    console.log('listeners', listeners)
-    if(!listeners) {
-      console.log('unsub', entity.id);
-      // No one cares about these updates so unsub
-      sub.unsubscribe(`actions:${entity.id}`);
-      entitySystem.removeEntity(entity);
-    }
-  }).catch(err => console.log(err))
-}
-
-function update() {
-
-  const updatedEntityIds = entitySystem.update()
-
-
-  if(updatedEntityIds.length === 0) {
-    setTimeout(update, TIMESTEP)
-
-    return
-  }
-
-  console.log('ENTITY: update', updatedEntityIds)
-
-  const pipeline = redis.pipeline();
-  updatedEntityIds.forEach(id => {
-    const entity = entitySystem.get(id);
-    pipeline.hmset(`entity:${id}`, entity); // only set updated fields?
-    publishUpdate(entity);
-    console.log('ENTITY: set', entity)
-  })
-
-    console.log('ENTITY: finished update 1')
-
-  pipeline.exec((err, results) => console.log(err, results))
-
-  console.log('ENTITY: finished update 2')
-      setTimeout(update, TIMESTEP)
-
-}
-
-//redis.brpop('entities', 0).then(handleNewEntity);
-
-sub.subscribe('entities');
-
-setTimeout(update, TIMESTEP)
-
+new EntityServer(config)

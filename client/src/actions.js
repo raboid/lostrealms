@@ -1,7 +1,17 @@
-import { CHAT_ACTIONS, AUTH_ACTIONS, ENTITY_ACTIONS, CHAT_CHANNELS } from './constants';
-import { encode } from 'shared/utils';
+import {
+  AUTH_ACTIONS,
+  CHAT_ACTIONS,
+  ENTITY_ACTIONS,
+  CHAT_CHANNELS
+} from "shared/constants"
+import { generateId } from "utils"
 
-export const chatMessage = ({ time, to, message, channel=CHAT_CHANNELS.GLOBAL }) => encode({
+export const chatMessage = ({
+  time,
+  to,
+  message,
+  channel = CHAT_CHANNELS.GLOBAL
+}) => ({
   type: CHAT_ACTIONS.MESSAGE,
   payload: {
     time,
@@ -12,93 +22,33 @@ export const chatMessage = ({ time, to, message, channel=CHAT_CHANNELS.GLOBAL })
   }
 })
 
-export const noChatRecipient = ({ to, from }) => encode({
+export const noChatRecipient = ({ to, from }) => ({
   type: CHAT_ACTIONS.NO_RECIPIENT,
   payload: { to, from }
 })
 
-export const authenticate = (name) => encode({
+export const authenticate = name => ({
   type: AUTH_ACTIONS.AUTHENTICATE,
   payload: name
 })
 
 // change to entityUpdates
 export function updatedEntities(updates) {
-  if(updates.length > 0) {
-    updates = updates.map(({ sprite, ...socketEntity }) => socketEntity);
+  if (updates.length > 0) {
+    updates = updates.map(({ sprite, ...socketEntity }) => socketEntity)
 
-    return encode({
+    return {
       type: ENTITY_ACTIONS.UPDATE,
       payload: updates
-    })
+    }
   }
 
-  return encode({ type: ENTITY_ACTIONS.UPDATE })
+  return { type: ENTITY_ACTIONS.UPDATE }
 }
 
 export function entityActions(actions) {
-  return encode({
+  return {
     type: ENTITY_ACTIONS.ACTIONS,
     payload: actions
-  })
-}
-
-export function addEntity(entity) {
-  const { sprite, ...socketEntity } = entity;
-
-  return encode({
-    type: ENTITY_ACTIONS.ADD,
-    payload: socketEntity
-  })
-}
-
-export function removeEntity(entity) {
-  const { sprite, ...socketEntity } = entity;
-
-  return encode({
-    type: ENTITY_ACTIONS.REMOVE,
-    payload: socketEntity
-  })
-}
-
-export function moveUp(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.MOVE_UP,
-    id: entityId
-  })
-}
-
-export function moveDown(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.MOVE_DOWN,
-    id: entityId
-  })
-}
-
-export function moveRight(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.MOVE_RIGHT,
-    id: entityId
-  })
-}
-
-export function moveLeft(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.MOVE_LEFT,
-    id: entityId
-  })
-}
-
-export function stopRightLeft(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.STOP_RIGHT_LEFT,
-    id: entityId
-  })
-}
-
-export function stopUpDown(entityId) {
-  return encode({
-    type: ENTITY_ACTIONS.STOP_UP_DOWN,
-    id: entityId
-  })
+  }
 }
