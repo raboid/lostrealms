@@ -8,7 +8,6 @@ export default function Player(entity) {
   const nameStyle = new PIXI.TextStyle({
     fontFamily: "Arial",
     fontSize: 12,
-    fontWeight: "bold",
     fill: "#ffffff"
   })
 

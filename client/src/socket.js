@@ -57,7 +57,7 @@ export default class Socket {
   send(action) {
     if (this.socket) {
       const message = encode(action)
-      console.log("sending", message)
+      //console.log("sending", message)
       this.socket.send(message)
     }
   }

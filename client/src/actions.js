@@ -2,8 +2,10 @@ import {
   AUTH_ACTIONS,
   CHAT_ACTIONS,
   ENTITY_ACTIONS,
-  CHAT_CHANNELS
-} from "shared/constants"
+} from "shared/actions"
+
+import { CHAT_CHANNELS } from 'shared/constants';
+
 import { generateId } from "utils"
 
 export const chatMessage = ({

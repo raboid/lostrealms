@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "description": "lostrealms.io",
   "scripts": {
-    "build:servers": "yarn clean:servers && concurrently \"babel --watch servers/src -d servers/dist\" \"babel --watch shared -d servers/dist/shared\"",
-    "build:servers:prod": "yarn clean:servers && babel servers/src -d servers/dist && babel shared -d servers/dist/shared",
+    "build:services": "yarn clean:services && concurrently \"babel --watch services/src -d services/dist\" \"babel --watch shared -d services/dist/shared\"",
+    "build:services:prod": "yarn clean:services && babel services/src -d services/dist && babel shared -d services/dist/shared",
     "build:client": "yarn clean:client && webpack --progress --watch --config webpack.config.dev.js",
     "build:client:prod": "yarn clean:client && webpack --progress --config webpack.config.dev.js",
-    "start": "concurrently --kill-others \"nodemon servers/dist/socket.js\" \"nodemon servers/dist/chat.js\" \"nodemon servers/dist/entity.js\"",
-    "build": "concurrently \"yarn build:server\" \"yarn build:client\"",
+    "start": "concurrently --kill-others \"nodemon services/dist/socket.js\" \"nodemon services/dist/chat.js\" \"nodemon services/dist/entity.js\" \"nodemon services/dist/player.js\" \"nodemon services/dist/game.js\"",
+    "build": "concurrently \"yarn build:services\" \"yarn build:client\"",
     "clean:client": "rm -rf client/dist",
-    "clean:servers": "rm -rf servers/dist",
+    "clean:services": "rm -rf services/dist",
     "precommit": "lint-staged"
   },
   "repository": {

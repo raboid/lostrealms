@@ -1,3 +1,0 @@
-export const AUTH_ACTIONS = {
-  AUTHENTICATE: "auth.AUTHENTICATE"
-}

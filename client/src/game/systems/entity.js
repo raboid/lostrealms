@@ -1,5 +1,10 @@
 import EntitySystem from "shared/systems/entity"
-import { Player, Bolt } from "../entities"
+import Types from "shared/types"
+
+import Ground from "../entities/ground"
+import Player from "../entities/player"
+import Bolt from "../entities/bolt"
+import Wall from '../entities/wall'
 
 const createClientEntity = entity => {
   console.log("creating", entity.type)
@@ -8,6 +13,10 @@ const createClientEntity = entity => {
       return Bolt(entity)
     case "player":
       return Player(entity)
+    case Types.GROUND:
+      return Ground(entity);
+    case Types.WALL:
+      return Wall(entity)
     default:
       throw "errror"
   }

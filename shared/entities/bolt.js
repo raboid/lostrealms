@@ -1,3 +1,5 @@
+import Types from '../types'
+
 const speed = 10
 
 const duration = 2000
@@ -32,7 +34,7 @@ export default function Bolt({ sid, origin, target, x, y, cid }) {
   y = centerY + vY * 4
 
   return {
-    type: "bolt",
+    type: "bolt", //Types.BOLT
 
     collidable: true,
 

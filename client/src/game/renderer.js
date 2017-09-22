@@ -12,7 +12,7 @@ export default class Renderer {
     this.pixi = new Pixi.WebGLRenderer(width, height, {
       antialias: false,
       transparent: true,
-      roundPixels: true
+      //roundPixels: true
     })
 
     window.addEventListener("resize", () => {
@@ -29,7 +29,14 @@ export default class Renderer {
 
   setup() {
     this.canvasRef.style.display = "block"
+
     this.stage = new Pixi.Container()
+
+    this.groundLayer = new Pixi.Container()
+    this.entityLayer = new Pixi.Container()
+
+    this.stage.addChild(this.groundLayer)
+    this.stage.addChild(this.entityLayer)
   }
 
   getPosition(x, y) {
@@ -37,14 +44,24 @@ export default class Renderer {
   }
 
   addSprite(sprite) {
-    this.stage.addChild(sprite)
+    if(sprite.layer === 'ground') {
+      this.groundLayer.addChild(sprite)
+    } else {
+      this.entityLayer.addChild(sprite);
+    }
   }
 
   removeSprite(sprite) {
-    this.stage.removeChild(sprite)
+    if(sprite.layer === 'ground') {
+      this.groundLayer.removeChild(sprite)
+    } else {
+      this.entityLayer.removeChild(sprite);
+    }
   }
 
   destroy() {
+    this.groundLayer = null
+    this.entityLayer = null
     this.stage = null
 
     this.pixi.clear(0)
@@ -54,11 +71,24 @@ export default class Renderer {
     //document.getElementById('game').removeChild(this.pixi.view)
   }
 
+  sortEntities(a, b) {
+    if (a.y > b.y) return 1;
+    if (a.y < b.y) return -1;
+    if (a.x > b.x) return 1;
+    if (a.x < b.x) return -1;
+    return 0;
+  }
+
   render({ x, y }) {
     this.stage.pivot.x = x
     this.stage.pivot.y = y
+
     this.stage.position.x = this.pixi.width / 2
     this.stage.position.y = this.pixi.height / 2
+
+    // Only sort entities layer
+    this.entityLayer.children.sort(this.sortEntities) 
+
     this.pixi.render(this.stage)
   }
 }

@@ -6,7 +6,7 @@ var BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 
 module.exports = {
   entry: {
-    client: path.join(__dirname, "client/src/index.js")
+    client: path.join(__dirname, "client/src/client.js")
   },
   output: {
     path: path.join(__dirname, "client/dist/"),
@@ -63,7 +63,7 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
-        test: /\.(json|png|jpg)$/,
+        test: /\.(json|png|jpg|gif)$/,
         loader: "file-loader?name=[path][name].[ext]"
       },
       {

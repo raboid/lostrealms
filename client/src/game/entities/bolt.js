@@ -15,11 +15,11 @@ export default function Bolt(entity) {
   sprite.position.x = entity.x
   sprite.position.y = entity.y
 
-  sprite.halfWidth = sprite.width / 2
-  sprite.halfHeight = sprite.height / 2
+  entity.halfWidth = sprite.width / 2
+  entity.halfHeight = sprite.height / 2
 
-  sprite.centerX = sprite.position.x + sprite.halfWidth
-  sprite.centerY = sprite.position.y + sprite.halfHeight
+  entity.centerX = entity.x + entity.halfWidth
+  entity.centerY = entity.y + entity.halfHeight
 
   return {
     ...entity,

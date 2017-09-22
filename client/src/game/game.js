@@ -5,7 +5,7 @@ import path from "path"
 import * as Actions from "actions"
 import * as SharedActions from "shared/actions"
 import EntitySystem from "./systems/entity"
-import Renderer from "./renderer"
+import Renderer from "./Renderer"
 import { decode, encode, generateId } from "shared/utils"
 
 import "assets/sheets/creatures.png"
@@ -24,24 +24,13 @@ const TIMESTEP = parseInt(1000 / TICK_RATE) //ms
 
 const SERVER_UPDATE = 60
 
-export const bindings = {
-  ui: {
-    toggleMenu: "m"
-  },
-  game: {
-    moveUp: "w",
-    moveDown: "s",
-    moveLeft: "a",
-    moveRight: "d",
-    attack: " "
-  }
-}
-
 export default class Game {
-  constructor(socket, reset) {
+  constructor(socket, reset, renderUI) {
     this.socket = socket
 
     this.reset = reset
+
+    this.renderUI = renderUI
 
     this.loaded = false
 
@@ -92,6 +81,8 @@ export default class Game {
   handlePlayer(player) {
     this.playerId = player.id
 
+    this.bindings = player.bindings
+
     this.pendingPlayer = player
 
     if (this.loaded) {
@@ -120,6 +111,8 @@ export default class Game {
     this.render()
 
     this.started = true
+
+    console.log('game started')
   }
 
   registerEventHandlers() {
@@ -153,7 +146,12 @@ export default class Game {
   }
 
   update = () => {
-    this.entitySystem.update()
+    const updatedEntityIds = this.entitySystem.update()
+    if(updatedEntityIds.length > 0) {
+      if(updatedEntityIds.some(id => id === this.playerId)) {
+        this.renderUI({ player: this.entitySystem.get(this.playerId) });
+      }
+    }
   }
 
   addRemoteEntity(entity) {
@@ -177,7 +175,11 @@ export default class Game {
     }
   }
 
-  addAction(action) {
+  addAction(action, playerAction) {
+    if(playerAction) {
+      action.id = this.playerId;
+    }
+
     if (typeof action === "object") {
       this.remoteActions.push(encode(action))
       this.entitySystem.addAction(action)
@@ -189,7 +191,6 @@ export default class Game {
 
   sendRemoteActions = () => {
     if (this.remoteActions.length > 0) {
-      console.log("sending actions", this.remoteActions)
       this.socket.send(Actions.entityActions(this.remoteActions))
       this.remoteActions = []
     }
@@ -219,24 +220,24 @@ export default class Game {
 
   getActionFromKeyDown = key => {
     switch (key) {
-      case bindings.game.moveUp:
+      case this.bindings.game.moveUp:
         return SharedActions.moveUp(this.playerId)
-      case bindings.game.moveLeft:
+      case this.bindings.game.moveLeft:
         return SharedActions.moveLeft(this.playerId)
-      case bindings.game.moveRight:
+      case this.bindings.game.moveRight:
         return SharedActions.moveRight(this.playerId)
-      case bindings.game.moveDown:
+      case this.bindings.game.moveDown:
         return SharedActions.moveDown(this.playerId)
     }
   }
 
   getActionFromKeyUp = key => {
     switch (key) {
-      case bindings.game.moveUp:
-      case bindings.game.moveDown:
+      case this.bindings.game.moveUp:
+      case this.bindings.game.moveDown:
         return SharedActions.stopUpDown(this.playerId)
-      case bindings.game.moveLeft:
-      case bindings.game.moveRight:
+      case this.bindings.game.moveLeft:
+      case this.bindings.game.moveRight:
         return SharedActions.stopLeftRight(this.playerId)
     }
   }

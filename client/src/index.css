@@ -1,5 +1,8 @@
 html {
-
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  user-select: none;
 }
 
 body {
@@ -8,15 +11,15 @@ body {
 }
 
 main {
-  display: flex;
+/*   display: flex;
   flex-grow: 1;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
-.flex-grow {
-  flex-grow: 1;
+button {
+  cursor:  pointer;
 }
 
 .pixelated {
@@ -28,13 +31,25 @@ main {
   flex-grow: 1;
   justify-content: center;
   align-items: center;
-  z-index: 2;
 }
 
 #game canvas {
+  cursor: crosshair !important;
   background-color: black;
+  z-index: 2;
+}
+
+#login {
+  margin-top: 200px;
+  margin-left: 40%;
+}
+
+#ui {
+  position: absolute;
+  top: 0;
 }
 
 .login {
-  margin-top: 200px;
+  display: flex;
+  align-items: center;
 }

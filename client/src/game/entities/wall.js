@@ -1,35 +1,27 @@
-import Entity from './entity'
-import * as Components from '../components'
-import Map from '../map'
+import SharedGround from "shared/entities/ground"
 
-// @Components.collision({
-//     any: (other) => {}
-// })
-@Components.sprite
-export default class Wall extends Entity {
-  constructor(config) {
-    super();
-    this.sprite = this.createSprite(config)
+export default function Wall(entity) {
+  const sprite = new PIXI.Sprite(
+    PIXI.loader.resources["world"].textures["world-wall-brown-1.png"]
+  )
+
+  //entity = SharedGround(entity)
+
+  sprite.anchor.x = 0.5
+  sprite.anchor.y = 0.5
+
+  sprite.position.x = entity.x
+  sprite.position.y = entity.y
+
+  entity.halfWidth = sprite.width / 2
+  entity.halfHeight = sprite.height / 2
+
+  entity.centerX = entity.x + entity.halfWidth
+  entity.centerY = entity.y + entity.halfHeight
+
+  return {
+    ...entity,
+
+    sprite
   }
-
-  createSprite({map, x, y, theme}) {
-    let id = PIXI.loader.resources['world'].textures;
-    let weight = 0;
-    if (map.checkNeighborWest(x, y)) {
-      weight += 1;
-    }
-    if (map.checkNeighborNorth(x, y)) {
-      weight += 2;
-    }
-    if (map.checkNeighborEast(x, y)) {
-      weight += 4;
-    }
-    if (map.checkNeighborSouth(x, y)) {
-      weight += 8;
-    }
-    let file = "world-wall-" + theme + "-" + weightToWallSprite(weight) + ".png";
-    let sprite = new PIXI.Sprite(id[file]);
-    sprite.position = Map.getPixelCoordinates(x, y);
-    return sprite;
-  } 
 }

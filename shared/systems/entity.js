@@ -1,20 +1,8 @@
-const acceleration = 5
-
 import Bolt from "../entities/bolt"
+import Types from '../types'
+import { ENTITY_ACTIONS } from '../actions'
 
-export const ENTITY_ACTIONS = {
-  ADD: "entity.ADD",
-  UPDATE: "entity.UPDATE",
-  REMOVE: "entity.REMOVE",
-  MOVE_UP: "entity.MOVE_UP",
-  MOVE_DOWN: "entity.MOVE_DOWN",
-  MOVE_RIGHT: "entity.MOVE_RIGHT",
-  MOVE_LEFT: "entity.MOVE_LEFT",
-  STOP_LEFT_RIGHT: "entity.STOP_LEFT_RIGHT",
-  STOP_UP_DOWN: "entity.STOP_UP_DOWN",
-  ACTIONS: "entity.ACTIONS",
-  SHOOT: "entity.SHOOT"
-}
+const acceleration = 5
 
 export default class EntitySystem {
   constructor(entities = {}, actions = []) {
@@ -76,41 +64,74 @@ export default class EntitySystem {
     return false
   }
 
+  getOppositeSide(side) {
+    switch(side) {
+      case 'top': return 'bottom'
+      case 'bottom': return 'top'
+      case 'left': return 'right'
+      case 'right': return 'left'
+    }
+  }
+
   checkCollision(entity) {
-    return Object.values(this.entities).some(otherEntity => {
+    const collision = Object.values(this.entities).some(otherEntity => {
       if (
-        otherEntity !== entity &&
-        otherEntity.sid !== entity.id &&
         otherEntity.collidable &&
-        this.hitTestRectangle(entity, otherEntity)
+        otherEntity !== entity &&
+        otherEntity.id !== entity.id &&
+        otherEntity.sid !== entity.id
       ) {
-        entity.collision = otherEntity.id || otherEntity.cid
-        otherEntity.collision = entity.id || entity.cid
-        this.updatedEntityIds.add(otherEntity.id || otherEntity.cid)
-        return true
+        const side = this.hitTestRectangle(entity, otherEntity)
+
+        if(side) {
+          entity.collision = { id: otherEntity.id || otherEntity.cid, side }
+
+          otherEntity.collision = { id: entity.id || entity.cid, side: this.getOppositeSide(side) }
+
+          this.updatedEntityIds.add(otherEntity.id || otherEntity.cid)
+
+          return true
+        }
       }
       return false
     })
+
+    if(!collision) {
+      delete entity.collision
+    }
+
+    return collision;
   }
 
   hitTestRectangle(entityA, entityB) {
-    const vx = entityA.centerX - entityB.centerX
-    const vy = entityA.centerY - entityB.centerY
+    const dx = entityA.centerX - entityB.centerX
+    const dy = entityA.centerY - entityB.centerY
 
-    const combinedHalfWidths = entityA.halfWidth + entityB.halfWidth
-    const combinedHalfHeights = entityA.halfHeight + entityB.halfHeight
+    const width = entityA.halfWidth + entityB.halfWidth
+    const height = entityA.halfHeight + entityB.halfHeight
 
-    return (
-      Math.abs(vx) < combinedHalfWidths && Math.abs(vy) < combinedHalfHeights
-    )
+    const overlapping = Math.abs(dx) <= width && Math.abs(dy) <= height;
+    
+    if(overlapping) {
+      const wy = width * dy;
+      const hx = height * dx;
+
+      if (wy > hx) {
+        if (wy > -hx) {
+          return 'top'
+        } 
+        return 'right'
+      } else if (wy > -hx) {
+        return 'left'
+      }
+      return 'bottom';
+    }
+
+    return false;
   }
 
   updatePosition(entity) {
-    if (!(entity.vX || entity.vY)) {
-      return false
-    }
-
-    //console.log('ENT SYS: updating position', entity.x, entity.y, typeof entity.x, typeof entity.y)
+    //console.log('ENT SYS: updating position', entity.x, entity.y)
 
     entity.x += entity.vX // * dt
     entity.y += entity.vY // * dt
@@ -122,8 +143,6 @@ export default class EntitySystem {
       entity.sprite.position.x = entity.x
       entity.sprite.position.y = entity.y
     }
-
-    return true
   }
 
   shoot(source, { origin, target, cid }) {
@@ -138,6 +157,16 @@ export default class EntitySystem {
     }
 
     this.addEntity(bolt)
+  }
+
+  gain(stat, target, { amount }) {
+    const maxStat = `max${stat}`
+    stat = stat.toLowerCase();
+    target[stat] += amount //verify valid amt
+
+    if(target[stat] > target[maxStat]) {
+      target[stat] = target[maxStat]
+    }
   }
 
   applyAction(action) {
@@ -169,6 +198,12 @@ export default class EntitySystem {
       case ENTITY_ACTIONS.SHOOT:
         this.shoot(entity, action.payload)
         break
+      case ENTITY_ACTIONS.GAIN_HEALTH:
+        this.gain('Health', entity, action.payload)
+        break
+      case ENTITY_ACTIONS.GAIN_MANA:
+        this.gain('Mana', entity, action.payload)
+        break
       case ENTITY_ACTIONS.REMOVE:
         entity.deleted = true
         break
@@ -180,10 +215,20 @@ export default class EntitySystem {
   }
 
   updateEntity(entity) {
-    const updatedPosition = this.updatePosition(entity)
-    const collision = updatedPosition ? this.checkCollision(entity) : false
-    collision && console.log("collision")
+    let updatedPosition = false
+    let collision = false
+
+    if(entity.collision) {
+      collision = this.checkCollision(entity);
+    } else if(entity.vX || entity.vY) {
+      this.updatePosition(entity)
+      updatedPosition = true;
+
+      collision = this.checkCollision(entity)
+    }
+
     const durationExpired = this.checkDuration(entity)
+
     if (updatedPosition || durationExpired || collision) {
       this.updatedEntityIds.add(entity.id || entity.cid)
     }
@@ -201,16 +246,49 @@ export default class EntitySystem {
     }
 
     if (updatedEntity.collision) {
+      console.log('collision', updatedEntity, this.entities[updatedEntity.collision.id])
       switch (updatedEntity.type) {
         case "bolt":
           updatedEntity.deleted = true
           break
         case "player":
-          const otherEntity = this.entities[updatedEntity.collision];
-          if (otherEntity && otherEntity.type === "bolt") {
-            updatedEntity.health -= 100
+          const otherEntity = this.entities[updatedEntity.collision.id];
+          if (otherEntity) {
+            switch(otherEntity.type) {
+              case 'bolt':
+                updatedEntity.health -= 100
+                break
+              default:
+                switch(updatedEntity.collision.side) {
+                  case 'bottom':
+                    console.log('bottom')
+                    updatedEntity.vY = -5
+                    this.updatePosition(updatedEntity)
+                    updatedEntity.vY = 0
+                    break;
+                  case 'top':
+                    console.log('top')
+                    updatedEntity.vY = 5
+                    this.updatePosition(updatedEntity)
+                    updatedEntity.vY = 0
+                    break;
+                  case 'left':
+                    console.log('left')
+                    updatedEntity.vX = 5
+                    this.updatePosition(updatedEntity)
+                    updatedEntity.vX = 0
+                    break
+                  case 'right':
+                    console.log('right')
+                    console.log('left')
+                    updatedEntity.vX = -5
+                    this.updatePosition(updatedEntity)
+                    updatedEntity.vX = 0
+                    break
+                }
+                break
+            }
           }
-          break
       }
     }
 
