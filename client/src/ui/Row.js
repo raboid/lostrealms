@@ -1,15 +1,18 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types'
+import React, { PureComponent } from "react"
+import PropTypes from "prop-types"
 
 export default class Row extends PureComponent {
   render() {
     return (
-      <div style={{
-        display: 'flex',
-        marginBottom: '3px'
-      }}>
+      <div
+        className="row"
+        style={{
+          display: "flex",
+          marginBottom: "2px"
+        }}
+      >
         {this.props.children}
       </div>
-    );
+    )
   }
 }

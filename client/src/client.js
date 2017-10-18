@@ -33,9 +33,11 @@ class Client {
     this.game = new Game(this.socket, this.reset, this.renderUI)
     window.LR.Game = this.game
 
+    this.chat = []
+
     this.game.load()
 
-    this.loggedIn = false;
+    this.loggedIn = false
 
     this.renderLogin()
   }
@@ -58,22 +60,19 @@ class Client {
   }
 
   renderUI({ player, chat }) {
-    let update = false;
+    let update = false
 
-    if(!this.player || 
-      this.player.health !== player.health || 
-      this.player.mana !== player.mana
-    ) {
-      this.player = { ...player }
-      update = true;
+    if (player) {
+      this.player = { ...this.player, ...player }
+      update = true
     }
 
-    if(chat) {
-      this.chat = [ ...this.chat, chat];
-      update = true;
+    if (chat) {
+      this.chat = [...this.chat, chat]
+      update = true
     }
 
-    if(update) {
+    if (update) {
       ReactDOM.render(
         <UI socket={this.socket} chat={this.chat} player={this.player} />,
         document.getElementById("ui")
@@ -86,11 +85,11 @@ class Client {
   }
 
   startGame(player) {
-    if(this.authenticated) {
+    if (this.authenticated) {
       this.renderUI({ player })
       this.game.handlePlayer(player)
     } else {
-      setTimeout(() => this.startGame(player), 500);
+      setTimeout(() => this.startGame(player), 500)
     }
   }
 
@@ -99,11 +98,11 @@ class Client {
 
     switch (action.type) {
       case PLAYER_ACTIONS.ADD:
-        this.startGame(action.payload);
+        this.startGame(action.payload)
         break
       case ENTITY_ACTIONS.UPDATE:
         if (action.payload) {
-          this.game.handleRemoteEntities(action.payload)
+          this.game.handleRemoteUpdates(action.payload)
         }
         break
       case CHAT_ACTIONS.MESSAGE:
@@ -115,8 +114,8 @@ class Client {
       case AUTH_ACTIONS.AUTHENTICATED:
         this.renderLogin(false, true)
         setTimeout(() => {
-          this.authenticated = true;
-          this.unmountLogin();
+          this.authenticated = true
+          this.unmountLogin()
         }, 500)
         break
       default:

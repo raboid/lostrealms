@@ -3,6 +3,8 @@ html {
   width: 100%;
   background-color: black;
   user-select: none;
+  font-family: Verdana, sans-serif;
+  overflow: hidden;
 }
 
 body {
@@ -22,21 +24,17 @@ button {
   cursor:  pointer;
 }
 
-.pixelated {
-  image-rendering: pixelated;
-}
-
 #game {
-  display: flex;
+/*   display: flex;
   flex-grow: 1;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
 #game canvas {
-  cursor: crosshair !important;
   background-color: black;
   z-index: 2;
+  image-rendering: pixelated;
 }
 
 #login {
@@ -52,4 +50,12 @@ button {
 .login {
   display: flex;
   align-items: center;
+}
+
+.row:last-child {
+  margin-bottom: 0px !important;
+}
+
+.cell:last-child {
+  margin-right:  0px ;
 }

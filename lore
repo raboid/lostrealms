@@ -1,0 +1,556 @@
+Map 10,000 x 10,000 tiles
+
+
+onl 16-24 colors in game
+
+NOT FOCUSED ON KILLING, INSTEAD ON GROWING (FARMING), HEALING, AND SAVING CORRUPTED PPL
+
+Sell a currency for real life money that can onl purchase things on the black market
+Make the currency a real game item? u can trade but desnt drp on death? (bound to account)
+Black market is run by cats?
+Currency is catnip or yarn balls?
+
+"May the roots guide you"
+"Darker than the shadow"
+
+Game currency is called 'pieces'
+
+Circular
+
+
+
+
+s   f  f  f  d  d  w  w  w  w  w  t
+?--10--9--8--7--6--5--4--3--2--1--0
+
+have one of the 4 rivers that circulate back the grove end in an ocean port instead of just frost and shadow
+
+shadow is a few tiles past the water
+
+port guy talks about how the port used to host ships frm all over the realm
+
+randomly generate tree mazes
+
+Future updates will take up 3 slots (3,0000 tiles radius)
+
+The Grove
+--------
+Music
+  - Celtic inspired, harps and elvish sounding
+
+The Wild
+--------
+Music
+  - Celticy but more tension and faster
+
+The Molten
+----------
+Music
+  - Low horns and big drums
+
+The Desert
+-----------
+Music
+  - Arabian middle eastern inspired.
+
+The Frost
+---------
+  - Eery wind instruments
+
+The Shadow
+----------
+Music
+  - Electronic?
+
+The Roots
+-------
+Music
+  - Holy choir churchyy ethereal music
+
+
+Health and Energy
+
+Each stat has unique sound that plays when increased
+
+Cupid arrows during valentines event
+
+Chance of critical attack, and combo attacks
+
+Each attack has 5% to be critical -> dbl the dmg
+Each attack has 25% to start a combo, -> each attack after is 50% faster
+An attack after a combo start has a 50% chance to continue the combo
+
+STATS
+--------
+HEALTH
+ENERGY
+
+DEFENSE - reduce dmg by (ARMOR DEF + DEF MODS)/2
+  - if all dmg is blocked than take 1 dmg
+DAMAGE - (WEP SKILL) + WEP DMG + DMG MODS  (i.e 300 STR + 400-500 WEP + 30 DMG RING)
+
+STRENGTH - Armor levels, sword/axe levels, melee dmg
+DEXTERITY - Dodge chance, Bow levels, speed
+WISDOM - Spell dmg, recipe levels
+
+Skills
+------
+Using skills increases the stat, but u never increase an individual skill, their level is informed from the stat
+
+For mini game skills how good u complete the game effects % of increasing skill
+
+Mining - Strength
+Smithing - Strength
+Sword - Strength adds to dmg
+Axe - Strength adds to dmg
+
+Stealth - Dex
+Lockpicking - Dex
+Archery - Dex adds to dmg
+Fishing - Dex
+
+Brewing - Wisdom
+Spells - Wisdom adds to dmg
+Cooking - Wisdom
+Healing - Wisdom
+
+
+All skills have max level of 999
+
+
+Energy
+------
+- Almost everything uses up energy to an extent
+- Naturally can regained by not doing anything
+- Can be gained faster and get regen/overall buffs from food/potions
+
+
+
+- SHADOWS (BLACK)
+  - Wizard teaches black attacks (corruption) 
+    - Only can find wizard if you are corrupted
+  - Enemies
+    - Dead peeps, shadows, shades 
+
+- WILD 
+  - Wizard teaches green attacks (poison)
+  Enemies
+    - trolls, goblins, trees, bear
+  - UNDERGROUND
+    -1
+      - Copper T1
+      - Iron T2
+      - Lead T2
+    -2
+      - Silver T2
+      - Gold T3
+    - 3
+      - Magma T4 (effect)
+      - Wizard teaches flaming meteor (burns opponents)
+      - Flames
+
+- DESERT 
+  - Twisters can appear here (twister items)
+    - Caused by desert mage, if killed drops twister items and spells
+  - Enemies
+    - Scorpions, lizard guys, worms, desert peeps
+  - UNDERGROUND
+    - SAND
+
+Salami cats
+
+- FROST 
+ - Yetis, Ice elfs, polar bear
+  - wizard teaches iceball (freezes opponents)
+  - UNDERGROUND
+    - Surface has blizzards which reset sections
+    - every block must be thawed
+    - Ice
+    -1
+      - Cobalt T5
+      - Platinum T5
+      - Titanium T5
+    - 2
+      - Iridium (poison proof) T6
+      - Osmium (indestructible) T6
+    - 3  
+      - FROST T7
+      - ICE/WATER (WHITE/BLUE)
+ 
+
+- UNDERGROUND
+  - Magma rises up wiping out sections of the underground.
+    - Consistent so if there's magma flow, then there must be magma hole from 9(bottom) to that level
+    - Enemies
+      - Dwarves, vampires, bats, skeltons
+  - DESERT
+
+- GREAT TREE
+  - Where players start
+  - A 'utopia'
+
+What keeps the realms able to exist while the desert is empty and corruption keeps spreading
+THEY USED THE DESERT TO KEEP BACK THE SHADOW
+THE SHADOW FEEDS ON LIFE, SO THEY KILLED EVERYTHING TO CREATE THE DESERT
+
+THERE IS NO UNDER IN THE DESERT (ITS ALL JUST SAND)
+
+THERE IS UNDER IN THE FROST, BUT EVERY BLOCK MUST BE THAWED
+
+What is corruption from?
+
+Why does the corrupt ghost go back to the corruption
+
+
+
+
+Can move fastest using water (rafts, boats, etc..)
+
+Light realm which you can access from top level
+
+
+tutorial ends with plaer receiving their own seed that the could plant in the wilderness (not on main island)
+
+u dont have to kill anyone, with enuf armor/wisdom healing u can just tank through stuff
+
+the enemies are just entities that been 'corrupted' by the shadow
+
+Diamond - Light
+Obsidian - Shadow
+
+Topaz - Dex
+SAPPHIRE - Wisdom
+RUBY - Str
+
+TIER 0 [Grey]
+------
+- Junk
+
+TIER 1 [GREEN]
+-----
+- Wood
+- Stone
+
+TIER 2 [YELLOW]
+------
+- Copper
+- Iron
+- Lead
+
+TIER 3
+------ [ORANGE]
+- Silver
+- Gold
+
+TIER 4 [RED]
+------ 
+- Magma
+
+TIER 5 [DARK BLUE]
+------
+- Cobalt
+- Platinum
+- Titanium
+
+TIER 6 [PURPLE]
+------
+- Iridium
+- Osmium
+- Meteor
+
+TIER 7 [CYAN]
+------
+- Frost
+
+TIER 8
+------
+- Shadow [BLACK]
+- Dragon/Light [WHITE]
+
+TIER 9
+------
+- ????
+
+TIER 10
+-------
+- ?????
+
+
+
+ITEM TIERS
+---------
+WOOD - Brown
+ - tier 1
+ - 0
+ - Wall Can break with Iron and above
+STONE - Grey
+  - tier 1
+  - 10
+  - Wall Can break with Gold and above
+----
+COPPER -
+  - tier 1
+  - 30
+  - Ore can mine with Stone+
+  - Wall can break with
+IRON
+  - tier 2
+  - 60
+  - Can mine with Copper+
+LEAD
+  - tier 2
+  - 100
+---- only place to find obsidian
+SILVER
+  - tier 2
+  - 150
+  - Iron+
+GOLD
+  - tier 3
+  - 210
+  - Gold+
+------ 
+MAGMUS
+- Meet the fire dragon that created the desert. He tells u why and that u must seek the ice dragon in the frost with his molten gear.
+- He originally fought back the shadow in the land of molten magma. But he was defeated and took his people back to the roots.
+- After hearing that frost dragon was staying to die fighting. He decided he must do something to make his death not in vain. They
+learned from watching the shadow hit the frost that it grows from consuming life, so it slowed since the frost had little life. Then
+the lava dragon knew he must roar a fire so large that it would consume everything leaving but dust. To not disrepect the frost dragon
+he left that alone
+MOLTEN - Red (ilvl 240)
+
+
+-----
+Cobalt
+  - tier 5
+  - 280
+PLATINUM
+  - tier 5
+  - 370
+TITANIUM
+  - tier 6
+  - 580
+----- only place to find diamonds
+IRIDIUM
+  - 700
+OSMIUM
+  - 830
+-------- 
+FROSTOR
+- Meet the ice dragon that has stayed there and is keeping the shadow back. He says he learned he can enter the shadow with this special gear.
+That is how hes been keeping it back. But he grows weak and must inslist ur help to keep pushing it back.
+He challenges u to enter the shadow with his gear
+FROST - Blue
+
+
+REALM DRAGON
+---
+The realm dragon birthed everything including u. fighting a cosmetic battle with the shadow and attempting to beat it by creating other beings
+Final end game is beating the shadow back a lot and being invited under the tree ("The Roots") to meet the realm dragon that birthed the
+great tree and the realm. Lot of other dragons down there. He gives u a dragon egg. "Take care of this egg. Within it lies our last hope."
+
+
+
+Dragon pet!!!! You get to name it
+
+---------
+Gotten for going corrupt and reaching certain evil milestones. Better than Osmium and slightly better than dragon
+SHADOW - Black
+
+---
+Gotten from random meteor landings. Has about the item level as Osmium but not industricle... or mabe onl it is...
+METEOR - 
+
+
+COMBAT
+------
+POISION
+  - Poision causes you to lose hp over time
+  - You bleed poision pools which if stepped in will infect other entities
+
+
+
+WOOD - brown
+STONE - light grey
+COPPER - COPPER
+IRON - BROWNISH RED
+LEAD - dark silver
+SILVER - light SILVER
+GOLD - GOLD
+MAGMA - LIGHT RED/ORANGISH
+COBALT - DARK BLUE
+PLATINUM -
+TITANIUM -
+IRIDIUM - GREEN
+OSMIUM - PURPLISH
+ICE - LIGHT BLUE
+
+METEOR - RED
+SHADOW - BLACK
+DRAGON - WHITE
+
+DRAGONS
+-------
+their home was the first destroyed b the shadw first
+so now they must live near the core underneath the great tree, they used to live in a great volcano
+
+
+PvP
+------
+- Only corrupt players can kill other players
+- Corrupt comes from destroying someones realm or getting corrupted
+- Can duel with other players and gamble on the duel
+
+
+
+Use very little text in the game
+
+
+you are given a realm shard to protect by god. asks you to remain with the shard and protect it
+- communicate this through animation not text
+
+ADD CEREMONY! FOR THE HIGH MOMENTS
+
+MORE MASTERY
+
+
+Have the in game purchases be part of like a 'black market' run by some realm. Give the IAP an in-game story/explaination
+
+
+GUILDS
+-------
+  - Can choose a color
+    - Used for capes and guild name tag
+  - Items
+    - Capes
+      - Can give buffs. 
+      - Guildmaster Cape
+        - Buff any guild members within certain distance
+
+
+DEATH
+-----
+  UNCORRUPTED
+    - Player turns into white ghost. A few possible ways to be revived. Can wander for some time (?)
+    - Can be revived from high level spell learned from angel
+    - Rare item can do it too
+
+  CORRUPTED
+    - Player turns into black ghost. Heads to the nearest corruption. You can't control it, and camera stops folling after you
+    reach corruption but ghost continues further to... (where?)
+
+
+
+Special characters
+-------
+  Devil
+    - Chance of appearing after killing many players. Beating his challenge he also teaches ability
+
+  Angel
+    - Chance of appearing for healing/saving players. She teaches ability for beating challenge
+
+  Eye
+    - 
+
+  Djinni (I am always this char?)
+    - 
+
+
+Bags get equipped in the lower right footer
+
+Bags
+----
+- 4-16 slot bags
+- soulbox - 1 slot bag - only bag that persists while you're a ghost
+
+
+REALM WIZARDS
+-------------
+Each realm has a 'wizard' that will teach you a special ability if you can find him and pass his test. Each time you find him if you 
+already learned the previous one he teaches you a new one
+
+OR
+
+you must kill the wizard and then he drops a wand that has that spell as it's ability
+
+
+
+
+
+Hearts are only lost temporary by damage
+
+They are lost forever from vampires, corrupt hearts
+
+players spawn in the KINGDOM REALM
+
+players can push back the corruption by planting seeds in the corruption and if they survive to adult hood it pushes back the corruption perm in an area
+
+eventually if players take back too much a powerful corrupt boss will be able to enter the uncorrupted area and plant corruption
+
+your experience level with certain spells is essentially your chance of casting it correctly
+spells can be cast at varying levels of badness, resulting in negative effects on the caster
+In better cases it might effect the target and caster, just not do anything, or work correctly and just hit the target correctly
+
+you can get drunk/high in the game which also makes your spells be shit and weird
+
+The more you successfully cast the spell the more your expertise with it goes up
+
+Mining
+------
+- Sometimes rocks flash after you strike them
+- The more times you consecutively hit the same color the higher the chance you get that gem
+- If you don't strike anything consecutively you dont get a gem
+- Powerful picks can slow down or otherwise manipulate the colors
+- Otherwise you either get dirt, stone, or ore that can make things
+
+Rock -> (Ore | Gem | Dirt | Stone)
+
+   smelting  smithing
+Ore -> (Bar) -> Item
+
+4 Ore -> 1 Bar
+
+Wand - 6 Bars
+Bow - 8 Bars
+Sword - 10 Bars
+Helmet - 10 bars
+Axe - 12 Bars
+Pants - 15 bars
+Shield - 15 bars
+Chest - 20 bars
+Wall - 100 bars
+
+Crafting
+--------
+Combining resources to make something
+
+Brewing
+-------
+Mini game where you must mix ingredients in at the right time
+Doing better will increase the buff of the brew
+
+Smithing
+--------
+Mini game where you must keep a bar in a certain place by tapping at the right times, simulates keeping the metal at the right heat
+Doing better will increase the base stats of whatever you make
+
+Gem Settings
+------------
+Mini game where you have to time a shape moving over a slot for it, then time it again as the shape rotates and you line it up more into the slot
+Doing better will increase the buff the gems give
+
+Farming
+-------
+- Plant seeds to make things grow
+- Seed mini game where u play a seed finding a ideal spot
+- Watering mini game that buffs the plant
+- Plants grow time is measured by # of waters needed, each water must be after 24 hours
+- Harvest is just chopping it down. # of individual items from each plant is based on performance in 2 mini games
+- Well-watered, well-planted is best plant, so 4 levels?
+
+Food
+-----
+- Can give buffs
+- Can heal hearts
+
+

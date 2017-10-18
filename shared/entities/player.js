@@ -1,8 +1,8 @@
-import Objects from '../objects'
-import Types from '../types'
+import Objects from "../objects"
+import Types from "../types"
 
-const x = 100
-const y = 100
+const x = 10
+const y = 10
 
 const width = 24
 const height = 24
@@ -12,7 +12,7 @@ const halfHeight = height / 2
 
 export default function Player({ name }) {
   return {
-    type: "player", //Types.PLAYER
+    type: Types.PLAYER,
 
     collidable: true,
 
@@ -25,13 +25,21 @@ export default function Player({ name }) {
     maxMana: 100,
 
     bags: [
-        {
-            ...Objects['Plain Bag'],
-            0: { ...Objects['Small Health Potion'], stack: 74 },
-            1: { ...Objects['Silver Ring'] },
-            4: { ...Objects['Gold Ring'] },
-            6: { ...Objects['Small Mana Potion'], stack: 3 },
-        }
+      {
+        ...Objects["Rucksack"],
+        0: { ...Objects["Small Health Potion"], stack: 74 },
+        1: { ...Objects["Silver Ring"] },
+        2: { ...Objects["Gold Ring"] },
+        3: { ...Objects["Small Mana Potion"], stack: 3 },
+        4: { ...Objects["Magma Helmet"] },
+        5: { ...Objects["Magma Belt"] },
+        6: { ...Objects["Magma Greaves"] },
+        7: { ...Objects["Magma Gloves"] },
+        8: { ...Objects["Magma Boots"] },
+        9: { ...Objects["Magma Breastplate"] },
+        10: { ...Objects["Magma Sword"] },
+        11: { ...Objects["Magma Shield"] }
+      }
     ],
 
     equipment: {},
@@ -51,6 +59,10 @@ export default function Player({ name }) {
       }
     },
 
+    guild: {
+      name: "Salami Cats"
+    },
+
     name,
 
     width,
@@ -64,6 +76,10 @@ export default function Player({ name }) {
     centerX: x + halfWidth,
 
     centerY: y + halfHeight,
+
+    pX: x * 24,
+
+    pY: y * 24,
 
     x,
 

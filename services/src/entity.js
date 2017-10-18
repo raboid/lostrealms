@@ -1,8 +1,10 @@
 import Service from "./service"
 import EntitySystem from "./systems/entity"
-import { ENTITY_ACTIONS } from "./shared/actions"
-import Ground from './shared/entities/ground'
-import { generateId } from "./shared/utils"
+import { ENTITY_ACTIONS, addEntity } from "./shared/actions"
+import { generateId, rand } from "./shared/utils"
+
+import Types from "./shared/types"
+import Objects from "./shared/objects"
 
 class EntityService extends Service {
   constructor(config) {
@@ -16,68 +18,72 @@ class EntityService extends Service {
 
     this.entitySystem = new EntitySystem([], [], this.redis)
 
-    this.entitySystem.addEntity({ type: "wall", sid: generateId(), x: 200, y: 150 })
-    this.entitySystem.addEntity({ type: "ground", sid: generateId(), x: 150, y: 150 })
+    this.entitySystem.addAction(
+      addEntity({ ...Objects["Ice Sword"], x: 2, y: 2 })
+    )
+
+    // for(let x=0; x < 50; x++) {
+    //   for(let n=0; n < 50; n++) {
+    //     this.entitySystem.addAction(addEntity({ type: Types.GROUND, x, y: n, frame: rand(1,2) }))
+    //   }
+    // }
+
+    //this.entitySystem.addAction(addEntity({ type: Types.WALL, x: 20, y: 15 }))
 
     setTimeout(this.tick, this.timestep)
-    this.log('service started')
+    this.log("service started")
   }
 
   tick() {
     setTimeout(this.tick, this.timestep)
 
-    const updatedEntityIds = this.entitySystem.update()
+    const updates = this.entitySystem.update()
 
-    if (updatedEntityIds.length === 0) {
+    if (updates.length === 0) {
       return
     }
 
-    this.log("updated entity ids", updatedEntityIds)
+    //this.log("updates", updates)
 
     const pipeline = this.redis.pipeline()
 
-    updatedEntityIds.forEach(id => {
-      let entity = this.entitySystem.get(id)
-      if (!entity) {
-        // entity was deleted
-        entity = { id, deleted: true }
-        pipeline.del(`entity:${id}`)
+    updates.forEach(update => {
+      if (update.deleted) {
+        pipeline.del(`entity:${update.id}`)
       } else {
-        // update entity in redis
-        pipeline.hmset(`entity:${id}`, entity) // only set updated fields?
+        pipeline.hmset(`entity:${update.id}`, update)
       }
-      this.publishUpdate(entity)
+      this.publishUpdate(update)
     })
 
     pipeline.exec()
   }
 
-  publishUpdate(entity) {
-    this.log("publishing entity channel", entity)
-    this.publish(`entity:${entity.id}`, entity)
+  publishUpdate(update) {
+    this.log("publishing entity channel", update)
+    this.publish(`entity:${update.id}`, update)
       .then(listeners => {
         if (!listeners) {
           // No one cares about these updates so unsub
-          this.unsubscribe(`actions:${entity.id}`)
+          this.unsubscribe(`actions:${update.id}`)
 
-          this.entitySystem.removeEntity(entity)
+          this.entitySystem.removeEntity(update.id)
         }
       })
       .catch(err => this.log(err))
   }
 
   onEntitiesChannel(entity) {
-    this.entitySystem.addEntity(entity).then(entity => {
-      if (entity.type === "player") {
-        const playerKey = `player:${entity.name}`
-        this.redis
-          .hmset(playerKey, entity)
-          .then(() => this.publish(playerKey, entity))
-      }
+    entity = this.entitySystem.addEntity(entity)
+    if (entity.type === Types.PLAYER) {
+      const playerKey = `player:${entity.name}`
+      this.redis
+        .hmset(playerKey, entity)
+        .then(() => this.publish(playerKey, entity))
+    }
 
-      this.subscribe(`actions:${entity.id}`, this.onActionChannel)
-      this.publish(`entity:${entity.id}`, entity)
-    })
+    this.subscribe(`actions:${entity.id}`, this.onActionChannel)
+    this.publish(`entity:${entity.id}`, entity)
   }
 
   onActionChannel(action) {
@@ -93,7 +99,7 @@ const config = {
   },
   tickRate: 20,
   entityLimit: 10000,
-  name: 'ENTITY'
+  name: "ENTITY"
 }
 
 new EntityService(config)

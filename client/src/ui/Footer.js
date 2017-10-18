@@ -1,71 +1,88 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types'
+import React, { PureComponent } from "react"
+import PropTypes from "prop-types"
 
-import Actions from './Actions';
+import Actions from "./Actions"
+import Texture from "./Texture"
 
 export default class Footer extends PureComponent {
   static propTypes = {
     toggleShow: PropTypes.func.isRequired,
-    closeBag: PropTypes.func.isRequired,
-    openBag: PropTypes.func.isRequired,
     bags: PropTypes.arrayOf(PropTypes.object).isRequired,
     actions: PropTypes.object.isRequired,
     moveItem: PropTypes.func.isRequired,
-    useItem: PropTypes.func.isRequired
+    useItem: PropTypes.func.isRequired,
+    showChat: PropTypes.bool.isRequired,
+    showSkills: PropTypes.bool.isRequired,
+    showSettings: PropTypes.bool.isRequired,
+    showSkills: PropTypes.bool.isRequired
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.renderBag = this.renderBag.bind(this)
   }
 
   renderBag(bag) {
+    const { toggleShowBag } = this.props
+
     return (
-      <button type="button" onClick={() => this.props.toggleShowBag(bag)}>
-        {bag.name}
-      </button>
+      <Button
+        src={bag.src}
+        active={bag.open}
+        onClick={() => toggleShowBag(bag)}
+      />
     )
   }
 
   render() {
-    const { toggleShow, closeBag, openBag, bags, actions, moveItem, useItem } = this.props;
+    const {
+      toggleShow,
+      bags,
+      actions,
+      moveItem,
+      useItem,
+      showChat,
+      showSettings,
+      showEquipment,
+      showSkills
+    } = this.props
 
     return (
-      <div style={{
-        cursor: 'pointer',
-        height: '48px',
-        width:  '100%',
-        position: 'absolute',
-        bottom: 0,
-        display: 'flex',
-        flexShrink: 0,
-        alignItems: 'center',
-        zIndex: 2,
-        backgroundColor: 'darkgray',
-      }}>
-        <div style={{
-          flexBasis: 0,
-          display: 'flex',
-          flexGrow: 1,
-          justifyContent: 'flex-start',
-        }}>
-          <button style={{ height: '48px', border: 'none' }} type="button" onClick={() => toggleShow('Chat')}>
-            Chat
-          </button>
-        </div>
+      <div
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          flexShrink: 0,
+          alignItems: "center",
+          zIndex: 2
+        }}
+      >
+        <Button
+          active={showSkills}
+          src="item-potion-health-1.png"
+          onClick={() => toggleShow("Skills")}
+        />
         <Actions actions={actions} moveItem={moveItem} useItem={useItem} />
-        <div style={{
-          flexBasis: 0,
-          display: 'flex',
-          flexGrow: 1,
-          justifyContent: 'flex-end',
-        }}>
-          {bags.map(this.renderBag)}
-          <button style={{ height: '48px', border: 'none' }} type="button" onClick={() => toggleShow('Equipment')}>
-            Equipment
-          </button>
-        </div>
+        <Button
+          active={showSettings}
+          src="item-potion-health-1.png"
+          onClick={() => toggleShow("Settings")}
+        />
       </div>
-    );
+    )
   }
 }
+//'rgba(218, 165, 32, .7)'
+const Button = ({ active, onClick, src }) => (
+  <div
+    style={{
+      borderRadius: "50%",
+      padding: "5px",
+      margin: "0 5px",
+      backgroundColor: active ? "#987324" : "goldenrod"
+    }}
+    onClick={onClick}
+  >
+    <Texture src={src} />
+  </div>
+)

@@ -51,13 +51,15 @@ export default class Socket {
 
     // this.lastTimeStamp = message.timeStamp;
 
+    console.log("received", decode(message.data))
+
     this.handleAction(decode(message.data))
   }
 
   send(action) {
     if (this.socket) {
       const message = encode(action)
-      //console.log("sending", message)
+      console.log("sending", message)
       this.socket.send(message)
     }
   }

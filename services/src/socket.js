@@ -5,6 +5,7 @@ import Client from "./client"
 import { REDIS_CHANNELS } from "./constants"
 import * as SharedActions from "./shared/actions"
 import * as Actions from "./actions"
+import Types from "./shared/types"
 import { decode, generateId } from "./shared/utils"
 
 export default class SocketService extends Service {
@@ -15,7 +16,7 @@ export default class SocketService extends Service {
 
     this.entities = {}
 
-    this.updatedEntities = []
+    this.updates = []
 
     this.wssPort = process.env.PORT || 3000
 
@@ -25,11 +26,9 @@ export default class SocketService extends Service {
     this.onChatChannel = this.onChatChannel.bind(this)
     this.onEntityChannel = this.onEntityChannel.bind(this)
     this.onPlayerChannel = this.onPlayerChannel.bind(this)
-    this.sendUpdatedEntitiesToClients = this.sendUpdatedEntitiesToClients.bind(
-      this
-    )
+    this.sendUpdatesToClients = this.sendUpdatesToClients.bind(this)
     this.updateClient = this.updateClient.bind(this)
-    this.updateEntity = this.updateEntity.bind(this)
+    this.addUpdate = this.addUpdate.bind(this)
 
     this.wss = new WebSocket.Server({ port: this.wssPort })
 
@@ -47,10 +46,10 @@ export default class SocketService extends Service {
     this.subscribe(REDIS_CHANNELS.CHAT, this.onChatChannel)
     this.psubscribe("entity:*", this.onEntityChannel)
 
-    setInterval(this.sendUpdatedEntitiesToClients, this.timestep)
+    setInterval(this.sendUpdatesToClients, this.timestep)
 
-    this.log('service started');
-    this.log('listening on port', this.wssPort);
+    this.log("service started")
+    this.log("listening on port", this.wssPort)
   }
 
   onClientAction(client, action) {
@@ -111,6 +110,7 @@ export default class SocketService extends Service {
       this.subscribe(playerKey, this.onPlayerChannel)
 
       client.authenticated = true
+
       client.playerName = name
 
       client.send(Actions.authenticated())
@@ -118,25 +118,25 @@ export default class SocketService extends Service {
       client.send(SharedActions.updatedEntities(Object.values(this.entities)))
 
       delete this.clients[client.id]
+
       this.clients[client.playerName] = client
 
-      this.publish("entities", { type: "player", name })
+      this.publish("entities", { type: Types.PLAYER, name })
     })
   }
 
   onPlayerChannel(player) {
-    this.updateEntity(player)
-
     const client = this.clients[player.name]
 
     client.playerId = player.id
 
     client.send(SharedActions.addPlayer(player))
+
+    this.addUpdate(player)
   }
 
-  onEntityChannel(entity) {
-    this.log("received update on entity channel", entity)
-    this.updateEntity(entity)
+  onEntityChannel(update) {
+    this.addUpdate(update)
   }
 
   onChatChannel(action) {
@@ -152,7 +152,6 @@ export default class SocketService extends Service {
           if (typeof action === "string") {
             action = decode(action)
           }
-          this.log("socket pub", action)
           const actionHandlers = this.publish(`actions:${action.id}`, action)
           if (!actionHandlers) {
             ///smething
@@ -162,18 +161,27 @@ export default class SocketService extends Service {
     }
   }
 
-  updateEntity(entity) {
-    if (entity.deleted) {
-      this.log("deleted", entity, this.entities)
-      const localEntity = this.entities[entity.id]
-      if (localEntity && localEntity.type === "player") {
-        this.redis.del(`player:${localEntity.name}`)
+  addUpdate(update) {
+    this.log("received updated entity", update)
+
+    if (update.deleted) {
+      const entity = this.entities[update.id]
+
+      if (entity && entity.type === Types.PLAYER) {
+        this.redis.del(`player:${entity.name}`)
+
         delete this.entities[entity.id]
+
+        this.log("deleted player", entity.name)
       }
     } else {
-      this.entities[entity.id || entity.cid] = entity
+      this.entities[update.id || update.cid] = {
+        ...(this.entities[update.id || update.cid] || {}),
+        ...update
+      }
     }
-    this.updatedEntities.push(entity)
+
+    this.updates.push(update)
   }
 
   updateClient(action) {
@@ -182,13 +190,13 @@ export default class SocketService extends Service {
     }
   }
 
-  sendUpdatedEntitiesToClients() {
-    if (this.updatedEntities.length > 0) {
-      this.log("sending updates", this.updatedEntities)
-      const action = SharedActions.updatedEntities(this.updatedEntities)
+  sendUpdatesToClients() {
+    if (this.updates.length > 0) {
+      this.log("sending updates", this.updates)
+      const action = SharedActions.updatedEntities(this.updates)
       Object.keys(this.clients).forEach(this.updateClient(action))
 
-      this.updatedEntities = []
+      this.updates = []
     }
   }
 }
@@ -196,10 +204,10 @@ export default class SocketService extends Service {
 const config = {
   redis: {
     port: 6379,
-    subscriber: true,
+    subscriber: true
   },
-  name: 'SOCKET',
-  tickRate: 20,
+  name: "SOCKET",
+  tickRate: 20
 }
 
 new SocketService(config)

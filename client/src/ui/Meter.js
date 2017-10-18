@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
+import React, { PureComponent } from "react"
+import PropTypes from "prop-types"
 
-const heartSrc = require('assets/images/heart.png');
+const heartSrc = require("assets/images/heart.png")
 
 export default class Meter extends PureComponent {
   static propTypes = {
@@ -11,49 +11,72 @@ export default class Meter extends PureComponent {
   }
 
   render() {
-    const { current, max, type } = this.props;
+    const { current, max, type } = this.props
 
-    const icon = type === 'health' ? <HealthIcon /> : <ManaIcon />
+    const isHealth = type === "health"
 
-    const currentWidth = (current / max) * 150;
+    const icon = isHealth ? <HealthIcon /> : <ManaIcon />
+
+    const currentWidth = current / max * 150
 
     return (
-      <div style={{
-        zIndex: 2,
-        display: 'flex',
-        margin: '5px'
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginBottom: isHealth ? "2px" : 0
+        }}
+      >
         {icon}
-        <div style={{
-          display: 'flex',
-          width: `150px`,
-          padding: '2px',
-          backgroundColor: 'grey'
-        }}>
-          <div style={{
-            position: 'absolute',
-            fontSize: '10px',
-            color: 'white',
-            left: '85px',
-          }}>
+        <div
+          style={{
+            display: "flex",
+            width: `150px`,
+            borderRadius: "5px",
+            border: `1px solid ${isHealth ? "darkred" : "darkgreen"}`,
+            alignItems: "center"
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              fontSize: "10px",
+              color: "white",
+              left: "85px"
+            }}
+          >
             {`${current} /\ ${max}`}
           </div>
-          <div style={{
-            display: 'flex',
-            width: `${currentWidth}px`,
-            backgroundColor: type === 'health' ? 'red' : 'blue',
-
-          }} />
+          <div
+            style={{
+              display: "flex",
+              width: `${currentWidth}px`,
+              height: "14px",
+              borderTopLeftRadius: "4px",
+              borderBottomLeftRadius: "4px",
+              borderTopRightRadius: current === max ? "4px" : 0,
+              borderBottomRightRadius: current === max ? "4px" : 0,
+              backgroundColor: isHealth ? "red" : "green"
+            }}
+          />
         </div>
       </div>
-    );
+    )
   }
 }
 
 const HealthIcon = () => (
-  <img className="pixelated heart" src={heartSrc} />
-);
+  <img
+    className="pixelated heart"
+    src={heartSrc}
+    style={{ height: "16px", width: "16px", marginRight: "5px" }}
+  />
+)
 
 const ManaIcon = () => (
-  <img className="pixelated heart" src={heartSrc} />
-);
+  <img
+    className="pixelated heart"
+    src={heartSrc}
+    style={{ height: "16px", width: "16px", marginRight: "5px" }}
+  />
+)

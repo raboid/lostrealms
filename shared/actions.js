@@ -15,6 +15,7 @@ export const ENTITY_ACTIONS = {
   ADD: "entity.ADD",
   UPDATE: "entity.UPDATE",
   REMOVE: "entity.REMOVE",
+  MOVE: "entity.MOVE",
   MOVE_UP: "entity.MOVE_UP",
   MOVE_DOWN: "entity.MOVE_DOWN",
   MOVE_RIGHT: "entity.MOVE_RIGHT",
@@ -30,7 +31,7 @@ export const ENTITY_ACTIONS = {
 }
 
 export const PLAYER_ACTIONS = {
-  ADD: "player.ADD",
+  ADD: "player.ADD"
 }
 
 export const chatMessage = ({
@@ -107,6 +108,14 @@ export function removeEntity(entity) {
     type: ENTITY_ACTIONS.REMOVE,
     id: entity.id,
     payload: socketEntity
+  }
+}
+
+export function move(entityId, target) {
+  return {
+    type: ENTITY_ACTIONS.MOVE,
+    id: entityId,
+    payload: target
   }
 }
 

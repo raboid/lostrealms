@@ -1,8 +1,9 @@
 import SharedEntitySystem from "../shared/systems/entity"
-import Bolt from '../shared/entities/bolt';
-import Player from '../shared/entities/player';
-import Ground from '../shared/entities/ground';
-import Wall from '../shared/entities/wall'
+import Types, { ITEM_TYPES } from "../shared/types"
+
+import Player from "../shared/entities/player"
+import Tile from "../shared/entities/tile"
+import Item from "../shared/entities/item"
 
 export default class EntitySystem extends SharedEntitySystem {
   constructor(entities, actions, redis) {
@@ -12,33 +13,22 @@ export default class EntitySystem extends SharedEntitySystem {
   }
 
   addEntity(entity) {
-    console.log("server adding", entity, typeof entity)
-    switch (entity.type) {
-      case "player":
-        entity = Player(entity)
-        break
-      case "bolt":
-        entity = Bolt(entity)
-        break
-      case "ground":
-        entity = Ground(entity)
-        break
-      case "wall":
-        entity = Wall(entity)
-        break
-      default:
-        return Promise.reject()
+    if (entity.type === Types.PLAYER) {
+      entity = Player(entity)
+      // } else if(entity.type === Types.Tile) {
+      //   entity = Tile(entity)
+    } else if (ITEM_TYPES.includes(entity.type)) {
+      entity = Item(entity)
+    } else {
+      console.log("err")
     }
 
-    return this.redis.incr("next_entity_id").then(id => {
-      entity.id = parseInt(id)
+    entity = super.addEntity(entity)
 
-      super.addEntity(entity)
+    this.redis
+      .hmset(`entity:${entity.id}`, entity)
+      .catch(err => console.log("error", err))
 
-      return this.redis
-        .hmset(`entity:${id}`, entity)
-        .then(() => Promise.resolve(entity))
-        .catch((err) => console.log('error', err))
-    })
+    return entity
   }
 }

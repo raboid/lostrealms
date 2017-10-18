@@ -1,18 +1,22 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types'
+import React, { PureComponent } from "react"
+import PropTypes from "prop-types"
 
 export default class Cell extends PureComponent {
   render() {
     return (
-      <div style={{
-        display: 'flex',
-        marginRight: '3px',
-        width: '36px',
-        height: '36px',
-        backgroundColor: 'gray',
-      }}>
+      <div
+        className="cell"
+        style={{
+          display: "flex",
+          width: "24px",
+          height: "24px",
+          marginRight: "2px",
+          borderRadius: "5px",
+          backgroundColor: "#42320F"
+        }}
+      >
         {this.props.children}
       </div>
-    );
+    )
   }
 }

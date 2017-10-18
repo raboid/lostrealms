@@ -1,24 +1,20 @@
 import EntitySystem from "shared/systems/entity"
-import Types from "shared/types"
+import Types, { ITEM_TYPES } from "shared/types"
 
-import Ground from "../entities/ground"
+//import Tile from "../entities/Tile"
 import Player from "../entities/player"
-import Bolt from "../entities/bolt"
-import Wall from '../entities/wall'
+import Item from "../entities/item"
 
 const createClientEntity = entity => {
   console.log("creating", entity.type)
-  switch (entity.type) {
-    case "bolt":
-      return Bolt(entity)
-    case "player":
-      return Player(entity)
-    case Types.GROUND:
-      return Ground(entity);
-    case Types.WALL:
-      return Wall(entity)
-    default:
-      throw "errror"
+  if (entity.type === Types.PLAYER) {
+    return Player(entity)
+    // } else if(entity.type === Types.TILE) {
+    //   return Tile(entity)
+  } else if (ITEM_TYPES.includes(entity.type)) {
+    return Item(entity)
+  } else {
+    console.log("la")
   }
 }
 
@@ -43,7 +39,7 @@ export default class ClientEntitySystem extends EntitySystem {
     this.renderer = renderer
     this.addEntity = this.addEntity.bind(this)
     this.removeEntity = this.removeEntity.bind(this)
-    this.mergeEntities = this.mergeEntities.bind(this)
+    this.mergeUpdates = this.mergeUpdates.bind(this)
   }
 
   addEntity(entity) {
@@ -56,36 +52,42 @@ export default class ClientEntitySystem extends EntitySystem {
     return super.addEntity(entity)
   }
 
-  removeEntity(entity) {
-    if (entity.sprite) {
-      this.renderer.removeSprite(entity.sprite)
+  removeEntity(id) {
+    const sprite = this.entities[id].sprite
+
+    if (sprite) {
+      this.renderer.removeSprite(sprite)
     }
 
-    return super.removeEntity(entity)
+    return super.removeEntity(id)
   }
 
-  mergeEntities(otherEntities) {
-    for (let i = 0, length = otherEntities.length; i < length; i++) {
-      const otherEntity = otherEntities[i]
+  mergeUpdates(updates) {
+    for (let i = 0, length = updates.length; i < length; i++) {
+      const update = updates[i]
 
-      const ourEntity = this.entities[otherEntity.id || otherEntity.cid]
+      const entity = this.entities[update.id || update.cid]
 
-      if (ourEntity) {
-        if (otherEntity.deleted) {
-          this.removeEntity(ourEntity)
+      if (entity) {
+        if (update.deleted) {
+          this.removeEntity(entity.id)
         } else {
-          Object.keys(otherEntity).forEach(updatedKey => {
-            ourEntity[updatedKey] = otherEntity[updatedKey]
+          Object.keys(update).forEach(key => {
+            entity[key] = update[key]
           })
 
-          if (ourEntity.sprite) {
-            ourEntity.sprite.position.x = ourEntity.x
-            ourEntity.sprite.position.y = ourEntity.y
+          if (entity.sprite) {
+            if (typeof update.pX !== "undefined") {
+              entity.sprite.position.x = update.pX
+            }
+            if (typeof update.pY !== "undefined") {
+              entity.sprite.position.y = update.pY
+            }
           }
         }
       } else {
-        if (!otherEntity.deleted) {
-          this.addEntity(otherEntity)
+        if (!update.deleted) {
+          this.addEntity(update)
         }
       }
     }

@@ -1,0 +1,62 @@
+DONE
+----
+Shooting bullet shows up on server and other clients see it [DONE]
+Bullets can hit and subtracts from life and they disappear [DONE]
+Players can have an inventory [DONE]
+Players can move between equipment and inventory depending on item type [DONE]
+Add life display to UI [DONE]
+Add mana display to UI [DONE]
+Allow moving potions from inventory to action bar [DONE]
+Show item details on hover [DONE]
+Allow items to have stacks [DONE]
+Make clicking on an action trigger it (or hotkey) [DONE]
+Using potion action uses up potion and heals player [DONE]
+Entities can collide with other entities based on layer and collidable property [DONE]
+Players can pick up items from walking on them [DONE]
+Players can move using mouse clicks [DONE]
+Asset pipeline for sprite sheets [DONE]
+Cleanup bottom toolbar and add good icons [DONE]
+Cleanup UI for life/mana [DONE]
+
+IN PROGRESS
+------------
+Move item use actions to player actions and player system/service (make entity actions into physics actions/systems/service?)
+
+Players can drop items on the ground
+
+Players drop bags when they die
+
+keybindings
+
+sync local equipment/inventoryy with the server
+
+NEXT
+-------------
+Spellbook where you can drag spells onto action bar and use them from there
+
+Text shows up saying how much damage was done
+
+show item stats relative to current equipment in desc
+
+Spawn enemies on the server
+
+Create basic enemy AI behaviors
+
+Create companions
+
+
+LATER
+--------
+
+Get popup menu setup with basic settings (keybinding?), exit, logout
+
+Supprt for registering players with a password tied to an email account
+Support logging in with a name or user/pass account
+Add register button to UI for unregistered players
+Prevent leaving the game without 20 second cooldown
+Prompt to register for unregistered players leaving site
+
+
+sid: Source id (id of thing that created entity)
+cid: Client id (id given to obj created on client first)
+pid: Persistent id (id that is same for every instance of that entity)

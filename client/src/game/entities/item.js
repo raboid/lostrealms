@@ -1,21 +1,21 @@
-import Entity from './entity'
-import * as Components from '../components'
-import Map from '../map'
+import SharedItem from "shared/entities/item"
 
-export default class Item extends Entity {
-  constructor(config) {
-    super();
-    this.sprite = this.createSprite()
-  }
+export default function Item(entity) {
+  const sprite = new PIXI.Sprite(
+    PIXI.loader.resources["sheet"].textures[entity.src]
+  )
 
-  createSprite({ x, y, theme, type }) {
-    let id = PIXI.loader.resources['items'].textures;
+  //entity = SharedGround(entity)
 
-    let file = "item-" + type + "-" + theme + ".png";
-    let sprite = new PIXI.Sprite(id[file]);
-    sprite.anchor.x = -0.25;
-    sprite.anchor.y = -0.25;
-    sprite.position = Map.getPixelCoordinates(x, y);
-    return sprite;
+  sprite.anchor.x = 0.5
+  sprite.anchor.y = 0.5
+
+  sprite.position.x = entity.x * 24 + 12
+  sprite.position.y = entity.y * 24 + 12
+
+  return {
+    ...entity,
+
+    sprite
   }
 }

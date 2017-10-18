@@ -25,8 +25,16 @@ export default class Service {
     }
   }
 
-  log(message) {
-    console.log(`[${this.config.name}] ${message}`);
+  log(...args) {
+    const output = args
+      .map(arg => {
+        if (typeof arg === "object") {
+          return JSON.stringify(arg)
+        }
+        return arg
+      })
+      .join(" \n")
+    console.log(`[${this.config.name}] ${output}`)
   }
 
   handleSubscriptions(channel, message) {

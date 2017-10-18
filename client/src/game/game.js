@@ -8,15 +8,8 @@ import EntitySystem from "./systems/entity"
 import Renderer from "./Renderer"
 import { decode, encode, generateId } from "shared/utils"
 
-import "assets/sheets/creatures.png"
-import "assets/sheets/items.png"
-import "assets/sheets/effects.png"
-import "assets/sheets/world.png"
-
-import creaturesJson from "assets/sheets/creatures.json"
-import itemsJson from "assets/sheets/items.json"
-import effectsJson from "assets/sheets/effects.json"
-import worldJson from "assets/sheets/world.json"
+import "assets/sheets/sheet.png"
+import sheetJson from "assets/sheets/sheet.json"
 
 const TICK_RATE = 20
 
@@ -36,7 +29,9 @@ export default class Game {
 
     this.init()
 
-    this.renderer = new Renderer()
+    this.handleClick = this.handleClick.bind(this)
+
+    this.renderer = new Renderer(this.handleClick)
 
     this.entitySystem = new EntitySystem([], [], this.renderer)
 
@@ -61,12 +56,7 @@ export default class Game {
 
   load() {
     console.log("loading game")
-    PIXI.loader
-      .add("creatures", creaturesJson)
-      .add("world", worldJson)
-      .add("items", itemsJson)
-      .add("effects", effectsJson)
-      .load(this.onLoad)
+    PIXI.loader.add("sheet", sheetJson).load(this.onLoad)
   }
 
   onLoad = () => {
@@ -93,12 +83,12 @@ export default class Game {
   start() {
     this.renderer.setup()
 
-    this.entitySystem.addEntity(this.pendingPlayer)
+    this.handleRemoteUpdates([this.pendingPlayer])
 
     const pendingEnts = Object.values(this.pendingEntities)
 
     if (pendingEnts.length > 0) {
-      this.entitySystem.mergeEntities(pendingEnts)
+      this.entitySystem.mergeUpdates(pendingEnts)
       delete this.pendingEntities
     }
 
@@ -112,11 +102,10 @@ export default class Game {
 
     this.started = true
 
-    console.log('game started')
+    console.log("game started")
   }
 
   registerEventHandlers() {
-    window.addEventListener("click", this.handleClick)
     window.addEventListener("keydown", this.handleKeyDown)
     window.addEventListener("keyup", this.handleKeyUp)
     window.addEventListener("beforeunload", this.handleUnload)
@@ -124,8 +113,9 @@ export default class Game {
 
   render = () => {
     const player = this.entitySystem.get(this.playerId)
+
     if (player) {
-      this.renderer.render(player)
+      this.renderer.render(player.sprite.position)
       requestAnimationFrame(this.render)
     } else {
       console.log("player died")
@@ -146,12 +136,16 @@ export default class Game {
   }
 
   update = () => {
-    const updatedEntityIds = this.entitySystem.update()
-    if(updatedEntityIds.length > 0) {
-      if(updatedEntityIds.some(id => id === this.playerId)) {
-        this.renderUI({ player: this.entitySystem.get(this.playerId) });
+    const updates = this.entitySystem.update()
+    if (updates.length > 0) {
+      if (updates.some(({ id }) => id === this.playerId)) {
+        this.renderUI({ player: this.entitySystem.get(this.playerId) })
       }
     }
+  }
+
+  addLocalEntity(entity) {
+    this.entitySystem.addAction(SharedActions.addEntity(entity))
   }
 
   addRemoteEntity(entity) {
@@ -164,20 +158,23 @@ export default class Game {
     )
   }
 
-  handleRemoteEntities(remoteEntities) {
-    //console.log('MERGING', remoteEntities);
+  handleRemoteUpdates(updates) {
     if (this.started) {
-      this.entitySystem.mergeEntities(remoteEntities)
+      this.entitySystem.mergeUpdates(updates)
     } else {
-      remoteEntities.forEach(
-        ent => (this.pendingEntities[ent.id || ent.cid] = ent)
+      updates.forEach(
+        update =>
+          (this.pendingEntities[update.id || update.cid] = {
+            ...(this.pendingEntities[update.id || update.cid] || {}),
+            ...update
+          })
       )
     }
   }
 
   addAction(action, playerAction) {
-    if(playerAction) {
-      action.id = this.playerId;
+    if (playerAction) {
+      action.id = this.playerId
     }
 
     if (typeof action === "object") {
@@ -196,51 +193,33 @@ export default class Game {
     }
   }
 
-  handleClick = event => {
-    if (event.target.localName !== "canvas") {
-      return
-    }
-
-    const player = this.entitySystem.get(this.playerId)
-
-    const origin = {
-      x: player.sprite.worldTransform.tx,
-      y: player.sprite.worldTransform.ty
-    }
-
-    const target = {
-      x: event.clientX,
-      y: event.clientY
-    }
-
-    this.addAction(
-      SharedActions.shoot(this.playerId, generateId(), origin, target)
-    )
+  handleClick(target) {
+    this.addAction(SharedActions.move(this.playerId, target))
   }
 
-  getActionFromKeyDown = key => {
-    switch (key) {
-      case this.bindings.game.moveUp:
-        return SharedActions.moveUp(this.playerId)
-      case this.bindings.game.moveLeft:
-        return SharedActions.moveLeft(this.playerId)
-      case this.bindings.game.moveRight:
-        return SharedActions.moveRight(this.playerId)
-      case this.bindings.game.moveDown:
-        return SharedActions.moveDown(this.playerId)
-    }
-  }
+  // getActionFromKeyDown = key => {
+  //   switch (key) {
+  //     case this.bindings.game.moveUp:
+  //       return SharedActions.moveUp(this.playerId)
+  //     case this.bindings.game.moveLeft:
+  //       return SharedActions.moveLeft(this.playerId)
+  //     case this.bindings.game.moveRight:
+  //       return SharedActions.moveRight(this.playerId)
+  //     case this.bindings.game.moveDown:
+  //       return SharedActions.moveDown(this.playerId)
+  //   }
+  // }
 
-  getActionFromKeyUp = key => {
-    switch (key) {
-      case this.bindings.game.moveUp:
-      case this.bindings.game.moveDown:
-        return SharedActions.stopUpDown(this.playerId)
-      case this.bindings.game.moveLeft:
-      case this.bindings.game.moveRight:
-        return SharedActions.stopLeftRight(this.playerId)
-    }
-  }
+  // getActionFromKeyUp = key => {
+  //   switch (key) {
+  //     case this.bindings.game.moveUp:
+  //     case this.bindings.game.moveDown:
+  //       return SharedActions.stopUpDown(this.playerId)
+  //     case this.bindings.game.moveLeft:
+  //     case this.bindings.game.moveRight:
+  //       return SharedActions.stopLeftRight(this.playerId)
+  //   }
+  // }
 
   handleUnload = () => {
     this.removeRemoteEntity({ id: this.playerId })
